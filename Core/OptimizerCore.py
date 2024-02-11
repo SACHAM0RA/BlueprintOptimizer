@@ -153,6 +153,9 @@ class ObjectElement(object):
     def __repr__(self):
         return extractStringBetween(self.content, 'Name="', '" ')
 
+    def __eq__(self, other):
+        return str(self) == str(other)
+
     def isValid(self):
         return self.content != ""
 
@@ -295,12 +298,48 @@ def syncConnections(allElements: List[ObjectElement]):
         element.fillConnectionsByData(allElements)
         element.fillConnectionsByFlow(allElements)
 
+
 def findBranchesAmongElements(allElements):
     branches = []
     for elem in allElements:
         if elem.type == ElementType.BRANCH:
             branches.append(elem)
     return branches
+
+
+def findAllAndOperatorsAmongElements(allElements):
+    ands = []
+    for elem in allElements:
+        if elem.type == ElementType.AND_OPERATOR:
+            ands.append(elem)
+    return ands
+
+
+def findAllOrOperatorsAmongElements(allElements):
+    ors = []
+    for elem in allElements:
+        if elem.type == ElementType.OR_OPERATOR:
+            ors.append(elem)
+    return ors
+
+
+def findAllAndOrOperatorsAmongElements(allElements):
+    ands = []
+    for elem in allElements:
+        if elem.type == ElementType.AND_OPERATOR or elem.type == ElementType.OR_OPERATOR:
+            ands.append(elem)
+    return ands
+
+
+def importBlueprintElementsFromString(originalContent: str):
+    contents = originalContent.replace("End Object", "End Object####").split("####")[:-1]
+
+    bp_elements: List[ObjectElement] = []
+    for content in contents:
+        bp_elements.append(ObjectElement(stringData=content))
+
+    syncConnections(bp_elements)
+    return bp_elements
 
 
 def importBlueprintElementsFromFile(fileName: str):

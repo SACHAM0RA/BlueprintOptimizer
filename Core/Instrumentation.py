@@ -127,7 +127,7 @@ def InstrumentBlueprint(bp_elements: List[ObjectElement]) -> str:
     if len(operands) == 1:
         seq_then_pins_section + "   " + createDummySequence(1) + '\n'
 
-    sequence_content = sequence_content.replace("{THEN_PINS}",seq_then_pins_section)
+    sequence_content = sequence_content.replace("{THEN_PINS}", seq_then_pins_section)
     final_code = final_code + '\n' + sequence_content
 
     return final_code
