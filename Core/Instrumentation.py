@@ -110,7 +110,8 @@ def InstrumentBlueprint(bp_elements: List[ObjectElement]) -> str:
     seq_then_pins_section = ""
     final_code = ""
     for index, operand in enumerate(operands):
-        inst, start_name, exec_pin = instrumentElement(operand, 350, -350*(len(operands)-index) + len(operands)*250)
+        inst, start_name, exec_pin = instrumentElement(operand, 350,
+                                                       -350 * (len(operands) - index) + len(operands) * 250)
         final_code = final_code + '\n' + inst
 
         pin_id = getPinCounter()
@@ -133,6 +134,7 @@ def InstrumentBlueprint(bp_elements: List[ObjectElement]) -> str:
     return final_code
 
 
-bp_elements = importBlueprintElementsFromFile('../SamplesBlueprintCode/SampleBlueprint_1')
-instrumented = InstrumentBlueprint(bp_elements)
-print(instrumented)
+if __name__ == "__main__":
+    bp_elements = importBlueprintElementsFromFile('../SamplesBlueprintCode/SampleBlueprint_1')
+    instrumented = InstrumentBlueprint(bp_elements)
+    print(instrumented)

@@ -229,12 +229,18 @@ class ObjectElement(object):
 
     def fillConnectionsByData(self, allElements: List):
         self.connectionsByData.clear()
+        connections = []
         for other in allElements:
             (success, pin, otherPin) = self.isConnectedByDataTo(other)
             if success:
-                self.connectionsByData.append((other, pin, otherPin))
+                connections.append((other, pin, otherPin))
                 if self.type == ElementType.BRANCH:
                     self.conditionElement = (other, pin, otherPin)
+
+        for pin in self.pins:
+            for connection in connections:
+                if pin == connection[1]:
+                    self.connectionsByData.append(connection)
 
     def findPinSink(self, pin: ObjectPin):
         for connection in self.connectionsByData:

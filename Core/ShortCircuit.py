@@ -207,7 +207,8 @@ def transformToShortCircuitFormat(bp_elements: List[ObjectElement]) -> List[Obje
     return transformed
 
 
-bp_elements = importBlueprintElementsFromFile('../SamplesBlueprintCode/SampleBlueprint_1')
-transformed_elements = transformToShortCircuitFormat(bp_elements)
-transformed_code = exportBlueprintElementsToCode(transformed_elements)
-print(transformed_code)
+if __name__ == "__main__":
+    bp_elements = importBlueprintElementsFromFile('../SamplesBlueprintCode/SampleBlueprint_1')
+    transformed_elements = transformToShortCircuitFormat(bp_elements)
+    transformed_code = exportBlueprintElementsToCode(transformed_elements)
+    print(transformed_code)

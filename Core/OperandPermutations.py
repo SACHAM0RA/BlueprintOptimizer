@@ -16,12 +16,17 @@ def getOperandPermutationsForOperator(operator: ObjectElement) -> List[ObjectEle
     pin_perms = list(permutations(data_names))
     for perm in pin_perms:
         new_operator_content = operator.content
+        orders = []
+        new_pin_contents = []
         for idx, name in enumerate(perm):
+            orders.append(data_names.index(name))
             old_pin_content = data_pins[idx].content
-            new_pin_content = old_pin_content.replace('PinName="' + data_names[idx] + '"', 'PinName=@@@@"' + name + '"')
-            new_operator_content = new_operator_content.replace(old_pin_content, new_pin_content)
+            new_pin_contents.append(old_pin_content.replace('PinName="' + data_names[idx] + '"', 'PinName="' + name + '"'))
+            new_operator_content = new_operator_content.replace(old_pin_content, "@@@" + str(idx) + "@@@")
 
-        new_operator_content = new_operator_content.replace('PinName=@@@@"', 'PinName="')
+        for idx, order in enumerate(orders):
+            new_operator_content = new_operator_content.replace("@@@" + str(order) + "@@@", new_pin_contents[idx])
+
         results.append(ObjectElement(stringData=new_operator_content))
 
     return results
@@ -54,10 +59,16 @@ def generateAllOperandPermutations(bp_elements: List[ObjectElement]) -> List[Lis
             permutations.remove(t)
             permutations.extend(new_lists)
 
-    return permutations
+    r_permutations: List[List[ObjectElement]] = []
+    for p in permutations:
+        text = exportBlueprintElementsToCode(p)
+        n = importBlueprintElementsFromString(text)
+        r_permutations.append(n)
+    return r_permutations
 
 
-bp_elements = importBlueprintElementsFromFile('../SamplesBlueprintCode/SampleBlueprint_2')
-search_space = generateAllOperandPermutations(bp_elements)
-transformed_code = exportBlueprintElementsToCode(search_space[3])
-print(transformed_code)
+if __name__ == "__main__":
+    bp_elements = importBlueprintElementsFromFile('../SamplesBlueprintCode/SampleBlueprint_2')
+    search_space = generateAllOperandPermutations(bp_elements)
+    code = exportBlueprintElementsToCode(search_space[3])
+    print(code)
